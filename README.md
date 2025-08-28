@@ -4,139 +4,74 @@
 
 A **Model Context Protocol (MCP) server** that provides natural language interface to Beyond Compare operations. This server allows Large Language Models (LLMs) to perform file and folder comparisons, synchronization, and other Beyond Compare operations through simple natural language commands.
 
-## 🚀 Features
+## Features
 
-- **🔗 MCP Protocol Support**: Seamless integration with any MCP-compliant LLM or agent
-- **📁 File & Folder Operations**: Compare files, folders, and generate reports
-- **🔄 Synchronization**: Sync folders with different strategies and preview modes
-- **🌐 Multiple Interfaces**: MCP server + standalone HTTP server for testing
-- **🛠️ Modern Architecture**: Built with UV package manager and modern Python practices
-- **🧪 Well Tested**: Comprehensive test suite with 90%+ coverage
+🔍 **File Comparison**
+- Compare two files with detailed difference analysis
+- Support for text and HTML output formats
+- Automatic detection of identical vs different files
 
-## 📋 Prerequisites
+📁 **Folder Comparison** 
+- Compare entire directory structures
+- Optional recursive subdirectory comparison
+- Comprehensive difference reporting
 
-1. **Beyond Compare**: Install from [scootersoftware.com](https://www.scootersoftware.com/)
-   - Ensure command-line tools are available (`bcomp` on macOS/Linux, `BCompare.exe` on Windows)
+📊 **Report Generation**
+- Generate detailed comparison reports in HTML, XML, or text formats
+- Customizable report paths and formats
+- Professional-quality comparison documentation
 
-2. **Python 3.10+**: Required for MCP package compatibility
+🔄 **Folder Synchronization**
+- Mirror synchronization (make target identical to source)
+- Update synchronization (copy only newer files)
+- Safe directory creation and validation
 
-3. **UV Package Manager** (recommended): Install from [docs.astral.sh/uv](https://docs.astral.sh/uv/)
+🔀 **File Merging**
+- 2-way file merging
+- 3-way merging with base file support
+- Automatic merge conflict resolution
 
-## 🛠️ Available MCP Tools
+## Prerequisites
 
-| Tool Name | Description |
-|-----------|-------------|
-| `compare_files` | Compare two files with various options (ignore case, whitespace, etc.) |
-| `compare_folders` | Compare directory structures recursively |
-| `sync_folders` | Synchronize folders with different strategies and preview mode |
-| `generate_report` | Generate comparison reports in multiple formats (HTML, XML, CSV, text) |
-| `get_beyond_compare_info` | Get information about Beyond Compare installation |
-| `list_file_formats` | List supported file formats and comparison capabilities |
+- **Beyond Compare**: This server requires Beyond Compare to be installed on your system
+  - macOS: [Download Beyond Compare for Mac](https://www.scootersoftware.com/download.php)
+  - Windows: [Download Beyond Compare for Windows](https://www.scootersoftware.com/download.php)
+  - Linux: [Download Beyond Compare for Linux](https://www.scootersoftware.com/download.php)
 
-## ⚡ Quick Start
+- **Python 3.13+**: Required for the MCP server
 
-### 1. Clone and Setup
+## Installation
 
-```bash
-git clone https://github.com/zhangsichu/beyond-compare-mcp.git
-cd beyond-compare-mcp/src/beyond_compare_mcp
-```
+1. **Clone and set up the project:**
+   ```bash
+   git clone git@github.com:zhangsichu/beyond-compare-mcp.git
+   cd beyond-compare-mcp
+   ```
 
-### 2. Install Dependencies
+2. **Install dependencies using uv:**
+   ```bash
+   uv sync
+   ```
 
-```bash
-# Using UV (recommended)
-uv sync
-```
+3. **Verify Beyond Compare installation:**
+   ```bash
+   # Test that Beyond Compare is accessible
+   bcomp --help
+   ```
 
-### 3. Run the Server
+## Usage with Cursor IDE
 
-```bash
-# Start standalone HTTP server (for testing and web interface)
-uv run python standalone_server.py
+This MCP server integrates seamlessly with Cursor IDE, enabling you to use Beyond Compare's powerful comparison tools through natural language commands.
 
-# OR start MCP server (for IDE integration)
-uv run python __main__.py
-```
-
-### 4. Test the Installation
-
-```bash
-# Run tests to verify everything works
-uv run python -m pytest tests/ -v
-
-# Quick functionality test
-uv run python -c "
-import sys; sys.path.insert(0, '.')
-import __init__ as bc_mcp
-manager = bc_mcp.BeyondCompareManager()
-print(f'✅ Beyond Compare found: {manager.bc_executable}')
-"
-```
-
-## 📖 Usage Examples
-
-### With MCP-Compatible LLMs
-
-Once the server is running, you can use natural language commands with any MCP-compatible LLM:
-
-```
-"Compare these two files: /path/to/file1.txt and /path/to/file2.txt"
-
-"Sync the folder /source to /destination"
-
-"Generate an HTML report comparing /folder1 and /folder2"
-
-"What file formats does Beyond Compare support?"
-```
-
-### HTTP API (Testing)
-
-When running the standalone server:
-
-```bash
-# Check server status
-curl http://localhost:8000/status
-
-# Compare files via REST API
-curl -X POST http://localhost:8000/api/compare_files \
-  -H "Content-Type: application/json" \
-  -d '{"left_file": "/path/to/file1.txt", "right_file": "/path/to/file2.txt"}'
-
-# Web interface
-open http://localhost:8000
-```
-
-### Direct Python Usage
-
-```python
-import sys
-sys.path.insert(0, 'src/beyond_compare_mcp')
-import __init__ as beyond_compare_mcp
-
-# Create manager
-manager = beyond_compare_mcp.BeyondCompareManager()
-
-# Compare files
-from server import compare_files
-result = compare_files("/path/to/file1.txt", "/path/to/file2.txt")
-print(result)
-```
-
-## 🧩 IDE Integration
-
-The Beyond Compare MCP server can be integrated with various IDEs and AI assistants that support the Model Context Protocol (MCP). Here's how to set it up:
-
-### Claude Desktop (Anthropic)
-
-1. **Install the MCP server** following the Quick Start guide above
-
-2. **Configure Claude Desktop** by editing the MCP configuration file:
-
-   **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-   **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-
-3. **Add the server configuration:**
+### Quick Setup
+1. Open Cursor Settings (`Cmd + ,` or `Ctrl + ,`)
+2. Search for "MCP" or "Model Context Protocol"
+3. Add a new MCP server:
+   - **Name:** `beyond-compare`
+   - **Command:** `uv`
+   - **Args:** `--directory /{your-source-folder} run beyond-compare-mcp`
+4. Restart Cursor IDE
+5. Start comparing files with natural language prompts!
 
 ```json
 {
@@ -144,290 +79,172 @@ The Beyond Compare MCP server can be integrated with various IDEs and AI assista
     "beyond-compare": {
       "command": "uv",
       "args": [
+        "--directory",
+        "/{your-source-folder}",
         "run",
-        "python",
-        "__main__.py"
+        "beyond-compare-mcp"
       ],
-      "cwd": "/path/to/your/beyond-compare-mcp/src/beyond_compare_mcp"
+      "description": "Beyond Compare file and folder comparison tools"
     }
   }
 }
 ```
 
-4. **Restart Claude Desktop** and you'll see the Beyond Compare tools available
+## Available Tools
 
-### Cursor IDE
+### 1. `compare_files`
+Compare two files and identify differences.
 
-1. **Ensure MCP support** is enabled in Cursor settings
+**Parameters:**
+- `left_file` (str): Path to the first file
+- `right_file` (str): Path to the second file  
+- `output_format` (str, optional): "text" or "html" (default: "text")
 
-2. **Add to Cursor's MCP configuration** (usually in `.cursor/mcp_config.json`):
-
-```json
-{
-  "servers": {
-    "beyond-compare": {
-      "command": "uv",
-      "args": ["run", "python", "__main__.py"],
-      "cwd": "/path/to/your/beyond-compare-mcp/src/beyond_compare_mcp"
-    }
-  }
-}
+**Example:**
+```
+Compare /path/to/file1.txt with /path/to/file2.txt in HTML format
 ```
 
-### VS Code with MCP Extension
+### 2. `compare_folders`
+Compare two directories and their contents.
 
-1. **Install an MCP extension** that supports external servers
+**Parameters:**
+- `left_folder` (str): Path to the first folder
+- `right_folder` (str): Path to the second folder
+- `include_subdirs` (bool, optional): Include subdirectories (default: true)
 
-2. **Configure the extension** to point to your MCP server:
-
-```json
-{
-  "mcp.servers": [
-    {
-      "name": "beyond-compare",
-      "command": "uv run python __main__.py",
-      "workingDirectory": "/path/to/your/beyond-compare-mcp/src/beyond_compare_mcp"
-    }
-  ]
-}
+**Example:**
+```
+Compare the folders /project/v1 and /project/v2 including all subdirectories
 ```
 
-### Generic MCP Client Integration
+### 3. `generate_comparison_report`
+Generate a detailed comparison report in various formats.
 
-For any MCP-compatible client:
+**Parameters:**
+- `left_path` (str): Path to first file/folder
+- `right_path` (str): Path to second file/folder
+- `report_path` (str): Where to save the report
+- `report_format` (str, optional): "html", "xml", or "text" (default: "html")
 
-1. **Server Command:** `uv run python __main__.py`
-2. **Working Directory:** `/path/to/your/beyond-compare-mcp/src/beyond_compare_mcp`
-3. **Protocol:** JSON-RPC over stdio
-4. **Server Name:** `BeyondCompare`
-
-### Usage in IDE/AI Assistant
-
-Once integrated, you can use natural language commands like:
-
-**File Comparison:**
+**Example:**
 ```
-"Compare the current file with its previous version"
-"Show me the differences between these two configuration files"
-"Are there any changes in /project/src/ compared to /project/backup/src/?"
+Generate an HTML comparison report for /src/old and /src/new, save it to /reports/comparison.html
 ```
 
-**Folder Synchronization:**
-```
-"Sync my local project folder with the backup folder"
-"Preview what changes would be made if I sync these directories"
-"Help me merge changes from the development folder to production"
-```
+### 4. `sync_folders`
+Synchronize two folders using different strategies.
 
-**Report Generation:**
-```
-"Generate an HTML comparison report for these two folders"
-"Create a detailed report showing all differences between these directories"
-"Export comparison results to CSV format"
-```
+**Parameters:**
+- `source_folder` (str): Source directory path
+- `target_folder` (str): Target directory path
+- `sync_mode` (str, optional): "mirror" or "update" (default: "mirror")
 
-**System Information:**
+**Example:**
 ```
-"Check if Beyond Compare is properly installed"
-"What file types can Beyond Compare handle?"
-"Show me the Beyond Compare version and capabilities"
+Mirror sync /backup/source to /backup/target
 ```
 
-### Troubleshooting IDE Integration
+### 5. `merge_files`
+Merge two or three files with conflict resolution.
 
-**Common Issues:**
+**Parameters:**
+- `left_file` (str): Path to left file
+- `right_file` (str): Path to right file
+- `output_file` (str): Path for merged output
+- `base_file` (str, optional): Base file for 3-way merge
 
-1. **"Command not found" errors:**
-   - Ensure `uv` is in your system PATH
-   - Use full path to `uv` executable if needed
-   - Verify the working directory path is correct
+**Example:**
+```
+Merge /branch1/config.json and /branch2/config.json, save result to /merged/config.json
+```
 
-2. **"Beyond Compare not found" errors:**
-   - Install Beyond Compare from [scootersoftware.com](https://www.scootersoftware.com/)
-   - Ensure command-line tools are installed
-   - Check that `bcomp` (macOS/Linux) or `BCompare.exe` (Windows) is accessible
+## Example Conversations in Cursor IDE
 
-3. **Permission errors:**
-   - Ensure the user has read/write access to the directories being compared
-   - On macOS, you might need to grant file access permissions to your IDE
+Here are some example prompts you can use:
 
-4. **MCP connection issues:**
-   - Verify the server starts correctly: `uv run python __main__.py`
-   - Check that JSON-RPC messages are properly formatted
-   - Look for error messages in the IDE's MCP logs
+1. **"Compare these two configuration files and show me the differences in HTML format"**
+   - Uses `compare_files` with HTML output
 
-**Testing the Integration:**
+2. **"Check if these two project directories are in sync"**  
+   - Uses `compare_folders` to analyze directory differences
+
+3. **"Generate a detailed comparison report between the old and new versions of my code"**
+   - Uses `generate_comparison_report` to create comprehensive documentation
+
+4. **"Sync my backup folder with the latest changes, but only copy newer files"**
+   - Uses `sync_folders` with "update" mode
+
+5. **"Merge these conflicting configuration files from two git branches"**
+   - Uses `merge_files` to resolve conflicts
+
+## Development
+
+### Running the server standalone
 
 ```bash
-# Test that the server responds to MCP initialization
-echo '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "test-client", "version": "1.0.0"}}}' | uv run python __main__.py
+# Run with uv
+uv run beyond-compare-mcp
+
+# Or activate the virtual environment and run directly
+source .venv/bin/activate  # Linux/macOS
+.venv\Scripts\activate     # Windows
+python -m beyond_compare_mcp.server
 ```
 
-**Example IDE Commands:**
+### Testing
 
-Once integrated, your AI assistant can help with tasks like:
-- "Compare the files I have open and tell me what changed"
-- "Sync my project directory with the backup and show me a preview"
-- "Generate a report of all differences in this codebase"
-- "Help me identify which files are different between these two versions"
-
-## 🔧 Development
-
-### Project Structure
-
-```
-beyond-compare-mcp/
-├── 📄 README.md              # This file
-├── 📄 LICENSE                # MIT license
-├── 📄 .gitignore             # Git ignore rules
-└── 📁 src/beyond_compare_mcp/    # Main implementation
-    ├── 📄 __init__.py        # Package initialization
-    ├── 📄 __main__.py        # MCP server entry point
-    ├── 📄 server.py          # Core MCP server logic
-    ├── 📄 standalone_server.py # HTTP server for testing
-    ├── 📄 config.py          # Configuration management
-    ├── 📄 utils.py           # Utility functions
-    ├── 📄 pyproject.toml     # Project configuration
-    ├── 📄 uv.lock            # Dependency lock file
-    ├── 📁 .venv/             # Virtual environment
-    └── 📁 tests/             # Test suite
-        └── test_beyond_compare.py
-```
-
-### Development Commands
+You can test individual tools by running the server and sending MCP requests, or use the MCP Inspector for debugging:
 
 ```bash
-cd src/beyond_compare_mcp
-
-# Install development dependencies
-uv sync
-
-# Run tests
-uv run python -m pytest tests/ -v
-
-# Run tests without integration tests
-uv run python -m pytest tests/ -v -m "not integration"
-
-# Code quality checks
-uv run ruff check .
-
-# Format code
-uv run ruff format .
-
-# Type checking
-uv run mypy .
-
-# Start development server (HTTP server for testing)
-uv run python standalone_server.py
+npx @modelcontextprotocol/inspector uv run beyond-compare-mcp
 ```
-
-### Adding New Tools
-
-1. Add your tool function to `server.py`
-2. Register it with the MCP server using `@mcp.tool()`
-3. Add tests in `tests/test_beyond_compare.py`
-4. Update this README's tools table
-
-Example:
-```python
-@mcp.tool()
-def my_new_tool(param1: str, param2: int = 5) -> str:
-    """
-    Description of what this tool does.
-    
-    Args:
-        param1: Description of param1
-        param2: Description of param2 with default value
-        
-    Returns:
-        Description of return value
-    """
-    # Implementation here
-    return "result"
-```
-
-## 🧪 Testing
-
-The project includes comprehensive tests:
 
 ```bash
-# Run all tests
-uv run python -m pytest tests/ -v
+uv run python src/tests/test_basic.py
+```
+## Troubleshooting
 
-# Run with coverage
-uv run python -m pytest tests/ --cov=. --cov-report=html
+### Common Issues
 
-# Run only fast tests (skip integration tests)
-uv run python -m pytest tests/ -v -m "not integration"
+1. **"Beyond Compare executable not found"**
+   - Ensure Beyond Compare is installed and accessible in your PATH
+   - On macOS, the installer usually places it at `/Applications/Beyond Compare.app/Contents/MacOS/bcomp`
+
+2. **"Permission denied" errors**
+   - Check file/folder permissions for the paths you're comparing
+   - Ensure the target directories for reports/sync operations are writable
+
+3. **Server not appearing in Cursor IDE**
+   - Verify the MCP configuration in Cursor settings
+   - Check that the absolute path to the project is correct
+   - Restart Cursor IDE after configuration changes
+
+4. **MCP connection issues**
+   - Check Cursor's MCP logs (location varies by platform)
+   - Ensure all dependencies are installed with `uv sync`
+   - Try running the setup helper: `uv run python setup_cursor.py`
+
+### Debug Logging
+
+The server logs to stderr. Check Cursor's logs or run the server manually to see debug output:
+
+```bash
+uv run beyond-compare-mcp
 ```
 
-## 🔧 Configuration
+## Contributing
 
-The server can be configured via environment variables or the `config.py` file:
+Contributions are welcome! Please feel free to submit issues and pull requests.
 
-- `BC_EXECUTABLE`: Path to Beyond Compare executable (auto-detected)
-- `BC_TIMEOUT`: Command timeout in seconds (default: 30)
-- `HTTP_PORT`: Port for standalone HTTP server (default: 8000)
-- `LOG_LEVEL`: Logging level (default: INFO)
+## License
 
-## 🚀 Deployment
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### As MCP Server
+## Related Links
 
-1. Install the package in your MCP environment
-2. Configure your MCP client to use this server
-3. Start the server with `python __main__.py`
-
-### As Standalone Service
-
-1. Run `python standalone_server.py`
-2. The HTTP server will start on port 8000
-3. Access the web interface or use the REST API
-
-### Docker Deployment
-
-Create a `Dockerfile`:
-
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-COPY src/beyond_compare_mcp/ .
-
-RUN pip install uv
-RUN uv sync --no-dev
-
-EXPOSE 8000
-CMD ["uv", "run", "python", "standalone_server.py"]
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes in `src/beyond_compare_mcp/`
-4. Add tests for new functionality
-5. Run the test suite: `uv run python -m pytest tests/ -v`
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Beyond Compare](https://www.scootersoftware.com/) for the excellent file comparison tool
-- [Model Context Protocol](https://modelcontextprotocol.io/) for the standardized interface
-- [UV](https://docs.astral.sh/uv/) for modern Python package management
-
-## 📚 Related Projects
-
+- [Beyond Compare Official Documentation](https://www.scootersoftware.com/v5help/)
+- [Beyond Compare Command Line Reference](https://www.scootersoftware.com/v5help/command_line_reference.html)
+- [Model Context Protocol Specification](https://modelcontextprotocol.io/)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
-- [Beyond Compare Documentation](https://www.scootersoftware.com/v5help/)
-- [MCP Specification](https://spec.modelcontextprotocol.io/)
-
----
-
-**Made with ❤️ for the MCP ecosystem**
+- [Cursor IDE Documentation](https://docs.cursor.com/)

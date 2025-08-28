@@ -1,0 +1,20 @@
+[project]
+name = "beyond-compare-mcp"
+version = "0.1.0"
+description = "An MCP server that provides Beyond Compare file and folder comparison tools for LLMs"
+readme = "README.md"
+authors = [
+    { name = "Sichu Zhang", email = "" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "mcp[cli]>=1.13.1",
+    "pydantic>=2.11.7",
+]
+
+[project.scripts]
+beyond-compare-mcp = "beyond_compare_mcp.server:main"
+
+[build-system]
+requires = ["uv_build>=0.8.10,<0.9.0"]
+build-backend = "uv_build"

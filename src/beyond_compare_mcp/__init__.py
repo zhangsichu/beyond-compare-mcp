@@ -1,16 +1,11 @@
-"""Beyond Compare MCP Server - Natural language interface for Beyond Compare operations."""
+"""
+Beyond Compare MCP Server
 
-try:
-    from .server import BeyondCompareError, BeyondCompareManager
-except ImportError:
-    # Handle case when running as standalone module
-    from server import BeyondCompareError, BeyondCompareManager
+An MCP server that provides Beyond Compare file and folder comparison tools for LLMs.
+"""
 
-__version__ = "1.0.0"
-__author__ = "Beyond Compare MCP"
-__description__ = "MCP server for Beyond Compare file and folder operations"
+__version__ = "0.1.0"
 
-__all__ = [
-    "BeyondCompareManager",
-    "BeyondCompareError",
-]
+from .server import main
+
+__all__ = ["main"]
